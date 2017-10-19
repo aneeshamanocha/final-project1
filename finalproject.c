@@ -5,19 +5,20 @@
 #define SUITS 4
 #define FACES 13
 
-/*
-* create struct for each card
-* holds: cardnum (2-ace), suit, face
-* arraylist struct
-*/
-
 typedef struct card {
   int cardNum;
   char *suit;
   char *face;
 } Card;
 
-void printCard(const int card, const char *suits[], const char *faces[])
+typedef struct vector {
+  size_t size;
+  size_t capacity;
+  Card *cards;
+}
+
+
+void printCard(const int card, const char *suits[], const char *faces[]);
 void resetDeck(int deck[]);
 void shuffleDeck(int deck[]);
 /*
@@ -26,7 +27,9 @@ void shuffleDeck(int deck[]);
 */
 
 int main(void){
-  puts("Welcome to the Game of BS!");
+  
+  //5 arraylists: player, comp1, comp2, comp3, pile
+  puts("Welcome to the Game of BS! Are you ready to play?");
   //shuffle
   //assign cards to three computers and player
   //show card to player & ask when ready to start Game
@@ -35,7 +38,10 @@ int main(void){
     //if does, place down those card(s)
     //else place random card down
     //each user has random chance to call BS
-    //add cards to arraylist if necessary
+      //if BS is called, check the last card
+        //if last card is the incorrect card, add all the cards from pile into arraylist & reset pile to 0
+    
+  //if comp1/comp2/comp3/player size == 0, print ("comp/player won the game!")
   srand(time(NULL));
   
   int deck[CARDS] = {0};
