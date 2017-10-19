@@ -17,7 +17,9 @@ typedef struct card {
   char *face;
 } Card;
 
-
+void printCard(const int card, const char *suits[], const char *faces[])
+void resetDeck(int deck[]);
+void shuffleDeck(int deck[]);
 /*
 * functions:
 * shuffle (Fisher Yates)
@@ -34,5 +36,37 @@ int main(void){
     //else place random card down
     //each user has random chance to call BS
     //add cards to arraylist if necessary
+  srand(time(NULL));
   
+  int deck[CARDS] = {0};
+  const char *suits[SUITS] = {"Diamonds", "Clubs", "Hearts", "Spades"};
+  const char *faces[FACES] = {"Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
+  
+  resetDeck(deck);
+  shuffleDeck(deck);
+  
+  return 0;
+}
+
+void printCard(const int card, const int char *suits[], const char *faces[])
+{
+  printf("%s of %s\n", faces[card%FACES], suits[card/FACES]);
+}
+
+void resetDeck(int deck[])
+{
+  for(size_t i =0; i < CARDS; ++i)
+  deck[i] = (int)i;
+}
+
+void shuffleDeck(int deck[])
+{
+  int randIndex, tmp;
+  for(size_t i =0; i < CARDS-1; ++i)
+  {
+    randIndex = rand() % (CARDS-i) + i;
+    int tmp = deck[i];
+    deck[i] = deck[randIndex];
+    deck[randIndex] = tmp;
+  }
 }
