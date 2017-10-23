@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define CARDS 52
 #define SUITS 4
@@ -10,23 +11,28 @@
 typedef struct card {
   int cardNum; //0-51
   char *suit; //diamonds, clubs, hearts, spades
-  int face; //2-14
+  char *face; //2-14
 } Card;
 
 typedef struct vector {
-  size_t size;
-  size_t capacity;
-  Card *cards;
+  size_t size; //size of specific vector
+  size_t capacity; //capacity of vector
+  Card *cards; //cards
 } Vector;
 
-void clear(Vector *vector);
-void init(Vector *vector);
-void resetDeck(Card * deck[], const char *suits[], int faces[]);
-void shuffleDeck(Card deck[]);
+void clear(Vector *vector); //free vector
+void init(Vector *vector); //initialize vector
+void resetDeck(Card deck[], char *suits[], char *faces[]); //reset deck of cards
+void shuffleDeck(Card deck[]); //shuffle deck of cards
+void printDeck(Card deck[]); //print deck
+void printVector(Vector *vector);
+int insertCard(Vector *vector, Card card, int index); //insert cards for each player
+void resizeIfFull(Vector *vector); //resize vector if full
+
 
 int main(void){
   //start the game
-  //srand(time(NULL));
+  srand(time(NULL));
   puts("Welcome to the Game of BS! Are you ready to play?");
   char str1;
   printf("y or n?\n");
@@ -44,24 +50,39 @@ int main(void){
   Vector comp3;
   Vector pile;
   Card deck[CARDS];
-  const char *suits[SUITS] = {"Diamonds", "Clubs", "Hearts", "Spades"};
-  int faces[FACES] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+  char *suits[SUITS] = {"Diamonds", "Clubs", "Hearts", "Spades"};
+  char *faces[FACES] = {"Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
+  "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
   init(&player);
   init(&comp1);
   init(&comp2);
   init(&comp3);
   init(&pile);
-  resetDeck(&deck, suits, faces);
-  for(size_t i = 0; i < CARDS; i++) {
-    printf("CardNum: %d Suit: %s Face: %d\n", deck[i].cardNum, deck[i].suit, deck[i].face);
-  }
-  puts("---------------");
+  resetDeck(deck, suits, faces);
   shuffleDeck(deck);
-  for(size_t i = 0; i < CARDS; i++) {
-    printf("CardNum: %d Suit: %s Face: %d\n", deck[i].cardNum, deck[i].suit, deck[i].face);
+
+  //player1 assigned cards
+  for(size_t i = 0; i < 13; ++i) {
+    insertCard(&player, deck[i], i);
   }
 
-  //shuffle
+  //comp1 assigned cards
+  for(size_t i = 13; i < 26; ++i) {
+    insertCard(&comp1, deck[i], i-13);
+  }
+
+  //comp2 assigned cards
+  for(size_t i = 26; i < 39; ++i) {
+    insertCard(&comp2, deck[i], i-26);
+  }
+
+  //comp3 assigned cards
+  for(size_t i = 39; i < 52; ++i) {
+    insertCard(&comp3, deck[i], i-39);
+  }
+
+  puts("FOR PLAYER");
+  printVector(&player);
   //assign cards to three computers and player
   //show card to player & ask when ready to start Game
   //user with ace of spades puts it down and next user goes
@@ -89,11 +110,11 @@ void init(Vector *vector) {
   vector->cards = calloc(CAPACITY, sizeof(char));
 }
 
-void resetDeck(Card * deck[], const char *suits[], int faces[]) {
+void resetDeck(Card deck[], char *suits[], char *faces[]) {
   for(size_t i = 0; i < CARDS; ++i) {
-    deck[i]->cardNum = i;
-    deck[i]->suit = suits[i/SUITS];
-    deck[i]->face = faces[i % FACES];
+    deck[i].cardNum = i;
+    deck[i].suit = suits[i/FACES];
+    deck[i].face = faces[i % FACES];
   }
 }
 
@@ -106,5 +127,31 @@ void shuffleDeck(Card deck[]) {
     Card tmp = deck[i];
     deck[i] = deck[randIndex];
     deck[randIndex] = tmp;
+  }
+}
+
+void printVector(Vector *vector) {
+  for(size_t i = 0; i < vector->size; ++i) {
+    printf("For %zu card:\n", i);
+    printf("CardNum: %d Suit: %s Face: %s\n", (vector->cards[i]).cardNum, (vector->cards[i]).suit, (vector->cards[i]).face);
+  }
+}
+
+void printDeck(Card deck[]) {
+  for(size_t i = 0; i < CARDS; i++) {
+    printf("CardNum: %d Suit: %s Face: %s\n", deck[i].cardNum, deck[i].suit, deck[i].face);
+  }
+}
+
+int insertCard(Vector *vector, Card card, int index){
+  resizeIfFull(vector);
+  vector->cards[index] = card;
+  vector->size++;
+}
+
+void resizeIfFull(Vector *vector) {
+  if(vector->size >= vector->capacity) {
+    vector->capacity *= 2;
+    vector->cards = realloc(vector->cards, sizeof(char) * vector->capacity);
   }
 }
