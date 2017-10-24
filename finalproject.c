@@ -67,18 +67,18 @@ int main(void){
   }
 
   //comp1 assigned cards
-  for(size_t i = 13; i < 26; ++i) {
-    insertCard(&comp1, deck[i], i-13);
+  for(size_t i = 0; i < 13; ++i) {
+    insertCard(&comp1, deck[i+13], i);
   }
 
   //comp2 assigned cards
-  for(size_t i = 26; i < 39; ++i) {
-    insertCard(&comp2, deck[i], i-26);
+  for(size_t i = 0; i < 13; ++i) {
+    insertCard(&comp2, deck[i+26], i);
   }
 
   //comp3 assigned cards
-  for(size_t i = 39; i < 52; ++i) {
-    insertCard(&comp3, deck[i], i-39);
+  for(size_t i = 0; i < 13; ++i) {
+    insertCard(&comp3, deck[i+39], i);
   }
 
   puts("FOR PLAYER");
@@ -96,7 +96,7 @@ int main(void){
   //if comp1/comp2/comp3/player size == 0, print ("comp/player won the game!")
 
 
-
+  
   return 0;
 }
 
