@@ -42,6 +42,9 @@ int main(void){
     return 0;
   }
 
+  //clears command line
+  printf("\e[1;1H\e[2J");
+
   //5 arraylists: player, comp1, comp2, comp3, pile & initialize all of them
   //1 card deck - initalize it as well
   Vector player;
@@ -62,27 +65,38 @@ int main(void){
   shuffleDeck(deck);
 
   //player1 assigned cards
+  puts("YOUR CARDS");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&player, deck[i], i);
+    printf("CardNum: %d Suit: %s Face: %s\n", (player.cards[i]).cardNum, (player.cards[i]).suit, (player.cards[i]).face);
   }
 
   //comp1 assigned cards
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp1, deck[i+13], i);
+    //puts("FOR COMP 1");
+    //printf("CardNum: %d Suit: %s Face: %s\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
   }
 
   //comp2 assigned cards
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp2, deck[i+26], i);
+    //puts("FOR COMP 2");
+    //printf("CardNum: %d Suit: %s Face: %s\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
   }
 
   //comp3 assigned cards
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp3, deck[i+39], i);
+    //puts("FOR COMP 3");
+    //printf("CardNum: %d Suit: %s Face: %s\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
   }
 
-  puts("FOR PLAYER");
-  printVector(&player);
+  /*puts("FOR PLAYER");
+  printVector(&player);*/
+
+  
+
   //assign cards to three computers and player
   //show card to player & ask when ready to start Game
   //user with ace of spades puts it down and next user goes
@@ -96,7 +110,7 @@ int main(void){
   //if comp1/comp2/comp3/player size == 0, print ("comp/player won the game!")
 
 
-  
+
   return 0;
 }
 
