@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #define CARDS 52
 #define SUITS 4
@@ -26,9 +27,9 @@ void resetDeck(Card deck[], char *suits[], char *faces[]); //reset deck of cards
 void shuffleDeck(Card deck[]); //shuffle deck of cards
 void printDeck(Card deck[]); //print deck
 void printVector(Vector *vector);
-int insertCard(Vector *vector, Card card, int index); //insert cards for each player
+void insertCard(Vector *vector, Card card); //insert cards for each player
 void resizeIfFull(Vector *vector); //resize vector if full
-
+Vector * findAceOfSpades(Vector *vector);
 
 int main(void){
   //start the game
@@ -64,38 +65,76 @@ int main(void){
   resetDeck(deck, suits, faces);
   shuffleDeck(deck);
 
+  //explaining rules of BS
+  puts("Here are the rules for BS: The cards are distributed evenly between three computers players and you. The ace of spades will be placed down first and then following the placement, the next player will check their deck for the number two. If they have any twos, they will place all of them down and say they have an amount of twos. If they do not have a two, they will place down one random card and claim they placed down a two. Each player then has a chance of calling BS on them. If somebody gets called for BS, the last card placed on the pile will be shown to the players. If the person who placed down the last card lied and the card wasn't the number they stated it was, the whole pile gets added to their deck. If the person who called BS is wrong and the person does have that card, they will get the whole pile added to their deck. The game will circle through the players, and the next player will place down threes. The same procedure will continue to occur until somebody runs out of cards.");
+  puts("");
+
+  sleep(5);
+
   //player1 assigned cards
   puts("YOUR CARDS");
   for(size_t i = 0; i < 13; ++i) {
-    insertCard(&player, deck[i], i);
-    printf("CardNum: %d Suit: %s Face: %s\n", (player.cards[i]).cardNum, (player.cards[i]).suit, (player.cards[i]).face);
+    insertCard(&player, deck[i]);
+    //printf("CardNum: %d Suit: %s Face: %s\n", (player.cards[i]).cardNum, (player.cards[i]).suit, (player.cards[i]).face);
   }
+  printVector(&player);
+
 
   //comp1 assigned cards
+  //puts("FOR COMP 1");
   for(size_t i = 0; i < 13; ++i) {
-    insertCard(&comp1, deck[i+13], i);
-    //puts("FOR COMP 1");
+    insertCard(&comp1, deck[i+13]);
     //printf("CardNum: %d Suit: %s Face: %s\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
   }
 
   //comp2 assigned cards
+  //puts("FOR COMP 2");
   for(size_t i = 0; i < 13; ++i) {
-    insertCard(&comp2, deck[i+26], i);
-    //puts("FOR COMP 2");
+    insertCard(&comp2, deck[i+26]);
     //printf("CardNum: %d Suit: %s Face: %s\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
   }
 
   //comp3 assigned cards
+  //puts("FOR COMP 3");
   for(size_t i = 0; i < 13; ++i) {
-    insertCard(&comp3, deck[i+39], i);
-    //puts("FOR COMP 3");
+    insertCard(&comp3, deck[i+39]);
     //printf("CardNum: %d Suit: %s Face: %s\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
   }
 
-  /*puts("FOR PLAYER");
-  printVector(&player);*/
-
-  
+  //find ace of spades and add to pile
+  if(findAceOfSpades(&player) != NULL) {
+    for(size_t i = 0; i < player.size; ++i) {
+      if((player.cards[i]).cardNum == 51) {
+        insertCard(&pile, player.cards[i]);
+        puts("in player 1");
+        break;
+      }
+    }
+  } else if(findAceOfSpades(&comp1) != NULL) {
+    for(size_t i = 0; i < comp1.size; ++i) {
+      if((comp1.cards[i]).cardNum == 51) {
+        insertCard(&pile, comp1.cards[i]);
+        puts("in comp 1");
+        break;
+      }
+    }
+  } else if(findAceOfSpades(&comp2) != NULL) {
+    for(size_t i = 0; i < comp2.size; ++i) {
+      if((comp2.cards[i]).cardNum == 51) {
+        insertCard(&pile, comp2.cards[i]);
+        puts("in comp 2");
+        break;
+      }
+    }
+  } else {
+    for(size_t i = 0; i < comp3.size; ++i) {
+      if((comp3.cards[i]).cardNum == 51) {
+        insertCard(&pile, comp3.cards[i]);
+        puts("in comp 3");
+        break;
+      }
+    }
+  }
 
   //assign cards to three computers and player
   //show card to player & ask when ready to start Game
@@ -146,8 +185,7 @@ void shuffleDeck(Card deck[]) {
 
 void printVector(Vector *vector) {
   for(size_t i = 0; i < vector->size; ++i) {
-    printf("For %zu card:\n", i);
-    printf("CardNum: %d Suit: %s Face: %s\n", (vector->cards[i]).cardNum, (vector->cards[i]).suit, (vector->cards[i]).face);
+    printf("Card %lu: %s of %s\n", (i+1), (vector->cards[i]).face, (vector->cards[i]).suit);
   }
 }
 
@@ -157,9 +195,9 @@ void printDeck(Card deck[]) {
   }
 }
 
-int insertCard(Vector *vector, Card card, int index){
+void insertCard(Vector *vector, Card card){
   resizeIfFull(vector);
-  vector->cards[index] = card;
+  vector->cards[vector->size] = card;
   vector->size++;
 }
 
@@ -168,4 +206,13 @@ void resizeIfFull(Vector *vector) {
     vector->capacity *= 2;
     vector->cards = realloc(vector->cards, sizeof(char) * vector->capacity);
   }
+}
+
+Vector * findAceOfSpades(Vector *vector){
+  for(size_t i = 0; i < vector->size; ++i) {
+    if((vector->cards)->cardNum == 51) {
+      return vector;
+    }
+  }
+  return NULL;
 }
