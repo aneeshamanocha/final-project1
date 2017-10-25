@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #define CARDS 52
+#define COOL 1
 #define SUITS 4
 #define FACES 13
 #define CAPACITY 1
