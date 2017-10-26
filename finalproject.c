@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #define CARDS 52
-#define COOL 1
 #define SUITS 4
 #define FACES 13
 #define CAPACITY 1
@@ -30,6 +29,7 @@ void printDeck(Card deck[]); //print deck
 void printVector(Vector *vector);
 void insertCard(Vector *vector, Card card); //insert cards for each player
 void resizeIfFull(Vector *vector); //resize vector if full
+void deleteCard(Vector *vector, int cardNum)
 Vector * findAceOfSpades(Vector *vector);
 
 int main(void){
@@ -82,60 +82,110 @@ int main(void){
 
 
   //comp1 assigned cards
-  //puts("FOR COMP 1");
+  puts("FOR COMP 1");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp1, deck[i+13]);
-    //printf("CardNum: %d Suit: %s Face: %s\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
+    printf("CardNum: %d Suit: %s Face: %s\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
   }
 
   //comp2 assigned cards
-  //puts("FOR COMP 2");
+  puts("FOR COMP 2");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp2, deck[i+26]);
-    //printf("CardNum: %d Suit: %s Face: %s\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
+    printf("CardNum: %d Suit: %s Face: %s\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
   }
 
   //comp3 assigned cards
-  //puts("FOR COMP 3");
+  puts("FOR COMP 3");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp3, deck[i+39]);
-    //printf("CardNum: %d Suit: %s Face: %s\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
+    printf("CardNum: %d Suit: %s Face: %s\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
   }
+
+  /*Vector tmp;
+  for(size_t i = 0; i < player.size; ++i) {
+    if((player.cards[i]).cardNum == 51) {
+      insertCard(&pile, player.cards[i]);
+      tmp = player;
+      puts("in player 1");
+      break;
+    }
+  }
+  for(size_t i = 0; i < comp1.size; ++i) {
+    if((comp1.cards[i]).cardNum == 51) {
+      insertCard(&pile, comp1.cards[i]);
+      tmp = comp1;
+      puts("in comp 1");
+      break;
+    }
+  }
+  for(size_t i = 0; i < comp2.size; ++i) {
+    if((comp2.cards[i]).cardNum == 51) {
+      insertCard(&pile, comp2.cards[i]);
+      tmp = comp2;
+      puts("in comp 2");
+      break;
+    }
+  }
+  for(size_t i = 0; i < comp2.size; ++i) {
+    if((comp2.cards[i]).cardNum == 51) {
+      tmp = comp2;
+      insertCard(&pile, comp2.cards[i]);
+      puts("in comp 2");
+      break;
+    }
+  }*/
 
   //find ace of spades and add to pile
   if(findAceOfSpades(&player) != NULL) {
-    for(size_t i = 0; i < player.size; ++i) {
+    puts("hello1");
+    for(size_t i = 0; i <= player.size; ++i) {
+      puts("??");
       if((player.cards[i]).cardNum == 51) {
         insertCard(&pile, player.cards[i]);
+        deleteCard(&player, (player.cards[i]).cardNum);
         puts("in player 1");
         break;
       }
     }
   } else if(findAceOfSpades(&comp1) != NULL) {
-    for(size_t i = 0; i < comp1.size; ++i) {
+    puts("hello3");
+    for(size_t i = 0; i <= comp1.size; ++i) {
+      puts("??");
       if((comp1.cards[i]).cardNum == 51) {
+        puts("hello4");
         insertCard(&pile, comp1.cards[i]);
+        deleteCard(&comp1, (comp1.cards[i]).cardNum);
         puts("in comp 1");
         break;
       }
     }
   } else if(findAceOfSpades(&comp2) != NULL) {
-    for(size_t i = 0; i < comp2.size; ++i) {
+    puts("hello5");
+    for(size_t i = 0; i <= comp2.size; ++i) {
+      puts("??");
       if((comp2.cards[i]).cardNum == 51) {
+        puts("hello6");
         insertCard(&pile, comp2.cards[i]);
+        deleteCard(&comp2, (comp2.cards[i]).cardNum);
         puts("in comp 2");
         break;
       }
     }
   } else {
-    for(size_t i = 0; i < comp3.size; ++i) {
+    puts("hello7");
+    for(size_t i = 0; i <= comp3.size; ++i) {
+      puts("??");
       if((comp3.cards[i]).cardNum == 51) {
+        puts("hello8");
         insertCard(&pile, comp3.cards[i]);
+        deleteCard(&comp3, (comp3.cards[i]).cardNum);
         puts("in comp 3");
         break;
       }
     }
   }
+
 
   //assign cards to three computers and player
   //show card to player & ask when ready to start Game
@@ -175,8 +225,7 @@ void resetDeck(Card deck[], char *suits[], char *faces[]) {
 void shuffleDeck(Card deck[]) {
   Card tmp;
   int randIndex;
-  for(size_t i = 0; i < CARDS-1; ++i)
-  {
+  for(size_t i = 0; i < CARDS-1; ++i){
     randIndex = rand() % (CARDS-i) + i;
     Card tmp = deck[i];
     deck[i] = deck[randIndex];
@@ -211,9 +260,25 @@ void resizeIfFull(Vector *vector) {
 
 Vector * findAceOfSpades(Vector *vector){
   for(size_t i = 0; i < vector->size; ++i) {
-    if((vector->cards)->cardNum == 51) {
+    if((vector->cards[i]).cardNum == 51) {
       return vector;
     }
   }
   return NULL;
+}
+
+void deleteCard(Vector *vector, int cardNum){
+  int index;
+  for(size_t i = 0; i < vector->size; ++i) {
+    if((vector->cards[i]).cardNum == cardNum) {
+      index = i;
+      break;
+    }
+  }
+
+  for(size_t i = index; i < vector->size-1; ++i) {
+    vector->cards[i] = vector->cards[i+1];
+  }
+  vector->size -= 1;
+
 }
