@@ -29,8 +29,8 @@ void printDeck(Card deck[]); //print deck
 void printVector(Vector *vector);
 void insertCard(Vector *vector, Card card); //insert cards for each player
 void resizeIfFull(Vector *vector); //resize vector if full
-void deleteCard(Vector *vector, int cardNum)
-Vector * findAceOfSpades(Vector *vector);
+void deleteCard(Vector *vector, int cardNum); //deletes card
+Vector * findAceOfSpades(Vector *vector); //find ace of spades
 
 int main(void){
   //start the game
@@ -173,11 +173,8 @@ int main(void){
       }
     }
   } else {
-    puts("hello7");
     for(size_t i = 0; i <= comp3.size; ++i) {
-      puts("??");
       if((comp3.cards[i]).cardNum == 51) {
-        puts("hello8");
         insertCard(&pile, comp3.cards[i]);
         deleteCard(&comp3, (comp3.cards[i]).cardNum);
         puts("in comp 3");
