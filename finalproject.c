@@ -184,7 +184,9 @@ int main(void){
     tmp = comp3;
   }
 
-  int currentCard = 2;
+  int currentCard = 2;   //current card player is looking for
+  int counter = 0; //how many of that type of card the player has
+  int alternative = 0; //bs card
   char str2, str3;
 
   while((player.size != 0) && (comp1.size != 0) && (comp2.size != 0) && (comp3.size != 0)) {
@@ -206,7 +208,7 @@ int main(void){
         puts("Do you want to stop the game?");
         printf("y or n?\n");
         scanf("%c", &str3);
-        if(str2 == 'y') {
+        if(str3 == 'y') {
           puts("Maybe next time!");
           return 0;
         }
@@ -218,7 +220,22 @@ int main(void){
       //find the current card
       puts("Here's your deck of cards");
       sleep(2);
+      printf("\e[1;1H\e[2J");
       printVector(&player);
+      printf("Your card to place down is %d.\n", currentCard);
+      for(size_t i = 0; i < player.size; i++) {
+        if((player.cards[i]).face == currentCard) {
+          counter++;
+        }
+      }
+      if(counter != 0) {
+        printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
+        scanf("%c", &str4);
+        if()
+      } else {
+        printf("You do not have any %ds. Choose which card you want to place down.\n", currentCard);
+        scanf("%d", &alternative);
+      }
 
     }
 
