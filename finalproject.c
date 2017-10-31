@@ -140,7 +140,6 @@ int main(void){
   Vector tmp;
   //find ace of spades and add to pile
   if(findAceOfSpades(&player) == 1) {
-    puts("hello1");
     for(size_t i = 0; i <= player.size; ++i) {
       if((player.cards[i]).cardNum == 51) {
         insertCard(&pile, player.cards[i]);
@@ -151,7 +150,6 @@ int main(void){
     }
     tmp = player;
   } else if(findAceOfSpades(&comp1) == 1) {
-    puts("hello2");
     for(size_t i = 0; i <= comp1.size; ++i) {
       if((comp1.cards[i]).cardNum == 51) {
         insertCard(&pile, comp1.cards[i]);
@@ -162,7 +160,6 @@ int main(void){
     }
     tmp = comp1;
   } else if(findAceOfSpades(&comp2) == 1) {
-    puts("hello3");
     for(size_t i = 0; i <= comp2.size; ++i) {
       if((comp2.cards[i]).cardNum == 51) {
         insertCard(&pile, comp2.cards[i]);
@@ -174,7 +171,6 @@ int main(void){
     tmp = comp2;
   } else {
     for(size_t i = 0; i <= comp3.size; ++i) {
-      puts("hello4");
       if((comp3.cards[i]).cardNum == 51) {
         insertCard(&pile, comp3.cards[i]);
         deleteCard(&comp3, (comp3.cards[i]).cardNum);
@@ -191,15 +187,58 @@ int main(void){
   int numOfCardsPlacedDown; //if player wants to place down less/more cards than they have
   int additionalCard; //if player wants to place down more cards than they have
   int counter1, counter2, counter3; //counter for placing cards in pile
-  int randPercent; //random percent for calling BS
-  int testBs = 0; //tests whether to break loop or not
   char str2; //for scanf
   char str3; //for scanf
   char str4; //for scanf
-  char str5; //for scanf
-  Vector tmp2; //temporary vector
-  int callingBS = 0; //callingBS = 2 not callingBS = 1
 
+  while((player.size != 0) && (comp1.size != 0) && (comp2.size != 0) && (comp3.size != 0))
+  {
+    if(tmp == comp1)
+    {
+      //computer 1 takes turn
+      if(comp1.size == 0)
+      {
+        printf("Computer 1 wins!");
+        break;
+      }
+      else
+      {
+        tmp = comp2;
+      }
+    }
+    }
+    else if(tmp == comp2)
+    {
+      //computer 2 takes turn
+      if(comp2.size == 0)
+      {
+        printf("Computer 2 wins!");
+        break;
+      }
+      else
+      {
+        tmp = comp3;
+      }
+    }
+    else if(tmp == comp3)
+    {
+      //computer 3 takes turn
+      if(comp3.size == 0)
+      {
+        printf("Computer 3 wins!");
+        break;
+      }
+      else
+      {
+        tmp = player;
+      }
+    }
+    else if(tmp == player)
+    {
+      //player takes turn
+    }
+  }
+  
   while((player.size != 0) && (comp1.size != 0) && (comp2.size != 0) && (comp3.size != 0)) {
     //find next player
     if((tmp.cards[0]).cardNum == (player.cards[0]).cardNum) {
@@ -250,7 +289,7 @@ int main(void){
           scanf("%d", &numOfCardsPlacedDown);
           //if they try to place down too many cards
           while(numOfCardsPlacedDown > 4) {
-            printf("You're trying to place too many cards. There are only four %ds Try again.\n", currentCard);
+            printf("You're trying to place too many cards. There are only four %ds in the deck. Try again.\n", currentCard);
             scanf("%d", &numOfCardsPlacedDown);
           }
 
@@ -348,140 +387,14 @@ int main(void){
       /*computers have a 20% chance of calling BS if they don't have the card themsevles
       *computers have a 50% chance of calling BS if they have one card themsevles
       *computers have a 70% chance of calling BS if they have two cards themselves
-      *computers have a 90% chance of calling BS if they have three cards themselves
-      *computers have a 100% chance of calling BS if they have all of the cards themselves*/
+      *computers have a 90% chance of calling BS if they have three cards themselves*/
+      if(findNumOfCards(&comp1, currentCard) > 0) {
 
-      tmp2 = comp1;
-      while((tmp2.cards[0]).cardNum != (player.cards[0]).cardNum) {
-        randPercent = rand() % 100 + 1; //establishes random percentage
+      } else if(findNumOfCards(&comp1, currentCard) == 0) {
 
-        //determining whether or not to call BS
-        if(findNumOfCards(&tmp2, currentCard) == 0) {
-          if(randPercent <= 20) {
-            callingBS = 2;
-          } else {
-            callingBS = 1;
-          }
-        } else if(findNumOfCards(&tmp2, currentCard) == 1) {
-          if(randPercent <= 50) {
-            callingBS = 2;
-          } else {
-            callingBS = 1;
-          }
-        } else if(findNumOfCards(&tmp2, currentCard) == 2) {
-          if(randPercent <= 70) {
-            callingBS = 2;
-          } else {
-            callingBS = 1;
-          }
-        } else if(findNumOfCards(&tmp2, currentCard) == 3) {
-          if(randPercent <= 90) {
-            callingBS = 2;
-          } else {
-            callingBS = 1;
-          }
-        } else {
-          callingBS = 2;
-        }
+      
 
-        //if somebody does call bs
-        if(callingBS == 2) {
-          puts("One of the computer users has called BS on you. Type y when you have received this message.");
-          scanf("%s", &str5);
-          while(str5 != 'y') {
-            puts("Please type y to confirm you have received this message");
-            scanf("%s", &str5);
-          }
-
-          //flip and sees player put down the wrong cards
-          for(size_t i = 0; i < numOfCardsPlacedDown; i++) {
-            if((pile.cards[pile.size-1-i]).face != currentCard) {
-                puts("The computer's attempt to call BS was correct! All of the cards in the pile will be added to your hand.");
-                sleep(1);
-
-                //insert cards into players hand
-                for(size_t i = 0; i < pile.size; i++) {
-                  insertCard(&player, pile.cards[i]);
-                }
-
-                //delete cards from pile to restart game
-                for(size_t i = pile.size-1; i >= 0; i--) {
-                  deleteCard(&pile, (pile.cards[i]).cardNum);
-                }
-
-                testBs = 1;
-                printVector(&player);
-                puts("Here is your new list. Ready to continue? Please type y to continue.");
-                scanf("%s", &str5);
-                while(str5 != 'y') {
-                  puts("Please type y to confirm you have received this message");
-                  scanf("%s", &str5);
-                }
-                break;
-            }
-          }
-          if(testBs == 1) {
-            break;
-          }
-
-          //if player had correct cards and was not lying
-          puts("You were right & put down the correct cards! The computer was wrong when it called BS. The computer will now take all of the cards.");
-          puts("Pile: 0 Cards");
-          sleep(1);
-          printf("\e[1;1H\e[2J");
-
-          puts("YOUR CARDS");
-          printVector(&player);
-
-          puts("Please confirm you are ready to move on by typing y.");
-          scanf("%s", &str5);
-          while(str5 != 'y') {
-            puts("Please type y to confirm you have received this message");
-            scanf("%s", &str5);
-          }
-          if((tmp2.cards[0]).cardNum == (comp1.cards[0]).cardNum) {
-            //insert cards into comp1 hand
-            for(size_t i = 0; i < pile.size; i++) {
-              insertCard(&comp1, pile.cards[i]);
-            }
-
-            //delete cards from pile to restart game
-            for(size_t i = pile.size-1; i >= 0; i--) {
-              deleteCard(&pile, (pile.cards[i]).cardNum);
-            }
-          } else if((tmp2.cards[0]).cardNum != (comp2.cards[0]).cardNum) {
-            //insert cards into comp2 hand
-            for(size_t i = 0; i < pile.size; i++) {
-              insertCard(&comp2, pile.cards[i]);
-            }
-
-            //delete cards from pile to restart game
-            for(size_t i = pile.size-1; i >= 0; i--) {
-              deleteCard(&pile, (pile.cards[i]).cardNum);
-            }
-          } else if((tmp2.cards[0]).cardNum != (comp3.cards[0]).cardNum) {
-            //insert cards into comp3 hand
-            for(size_t i = 0; i < pile.size; i++) {
-              insertCard(&comp3, pile.cards[i]);
-            }
-
-            //delete cards from pile to restart game
-            for(size_t i = pile.size-1; i >= 0; i--) {
-              deleteCard(&pile, (pile.cards[i]).cardNum);
-            }
-          }
-          break;
-        }
-
-        //changes computer to determine who is calling BS next
-        if((tmp2.cards[0]).cardNum == (comp1.cards[0]).cardNum) {
-          tmp2 = comp2;
-        } else if((tmp2.cards[0]).cardNum != (comp2.cards[0]).cardNum) {
-          tmp2 = comp3;
-        } else if((tmp2.cards[0]).cardNum != (comp3.cards[0]).cardNum) {
-          tmp2 = player;
-        }
-      }
+    }
 
     break;
 
@@ -497,22 +410,13 @@ int main(void){
     } else {
       currentCard++;
     }
-    //reset all cards
-
-    //whoever wins the game
-    if(comp1.size == 0) {
-      puts("Sorry! Comp1 won the game! Maybe next time!");
-      return 0;
-    } else if(comp2.size == 0) {
-      puts("Sorry! Comp2 won the game! Maybe next time!");
-      return 0;
-    } else if(comp3.size == 0) {
-      puts("Sorry! Comp3 won the game! Maybe next time!");
-      return 0;
-    } else {
-      puts("Congrats on winning the game!");
-      return 0;
-    }
+    counter = 0;
+    alternative = 0;
+    numOfCardsPlacedDown = 0;
+    counter1 = 0;
+    counter2 = 0;
+    counter3 = 0;
+    additionalCard = 0;
   }
 
 
@@ -525,6 +429,9 @@ int main(void){
     //each user has random chance to call BS
       //if BS is called, check the last card
         //if last card is the incorrect card, add all the cards from pile into arraylist & reset pile to 0
+
+  //if comp1/comp2/comp3/player size == 0, print ("comp/player won the game!")
+
 
 
   return 0;
