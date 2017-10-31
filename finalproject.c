@@ -242,9 +242,15 @@ int main(void){
         if(str4 == 'n') {
           printf("How many would you like to place down?\n");
           scanf("%d", &numOfCardsPlacedDown);
-          //if they to place down too many cards
+          //if they try to place down too many cards
           while(numOfCardsPlacedDown > 4) {
             printf("You're trying to place too many cards. There are only four %ds Try again.\n", currentCard);
+            scanf("%d", &numOfCardsPlacedDown);
+          }
+
+          //if they try to place down too little cards
+          while (numOfCardsPlacedDown <= 0) {
+            printf("You're trying to place too few cards. You have to place down at least one card.\n");
             scanf("%d", &numOfCardsPlacedDown);
           }
 
@@ -388,7 +394,7 @@ void clear(Vector *vector) {
 void init(Vector *vector) {
   vector->size = 0;
   vector->capacity = CAPACITY;
-  vector->cards = calloc(CAPACITY, sizeof(Card));
+  vector->cards = calloc(FACES, sizeof(Card));
 }
 
 void resetDeck(Card deck[], char *suits[], int faces[]) {
@@ -431,13 +437,15 @@ void insertCard(Vector *vector, Card card){
 void resizeIfFull(Vector *vector) {
   if(vector->size >= vector->capacity) {
     vector->capacity *= 2;
-    vector->cards = realloc(vector->cards, sizeof(char) * vector->capacity);
+    vector->cards = realloc(vector->cards, sizeof(Card) * vector->capacity);
   }
 }
 
 int findAceOfSpades(Vector *vector){
   for(size_t i = 0; i < vector->size; ++i) {
+      printf("findAceOfSpades: cardNum =   %d \n",(vector->cards[i]).cardNum);
     if((vector->cards[i]).cardNum == 51) {
+        printf("found card 51 in %d \n", vector->cards[i].face);
       return 1;
     }
   }
