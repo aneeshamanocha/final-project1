@@ -443,9 +443,9 @@ void resizeIfFull(Vector *vector) {
 
 int findAceOfSpades(Vector *vector){
   for(size_t i = 0; i < vector->size; ++i) {
-      printf("findAceOfSpades: cardNum =   %d \n",(vector->cards[i]).cardNum);
+      //printf("findAceOfSpades: cardNum =   %d \n",(vector->cards[i]).cardNum);
     if((vector->cards[i]).cardNum == 51) {
-        printf("found card 51 in %d \n", vector->cards[i].face);
+        //printf("found card 51 in %d \n", vector->cards[i].face);
       return 1;
     }
   }
