@@ -32,6 +32,7 @@ void insertCard(Vector *vector, Card card); //insert cards for each player
 void resizeIfFull(Vector *vector); //resize vector if full
 void deleteCard(Vector *vector, int cardNum); //deletes card
 int findAceOfSpades(Vector *vector); //find ace of spades
+int findNumOfCards(Vector *vector, int current); //finds the number of those cards in vector
 
 int main(void){
   //start the game
@@ -235,7 +236,7 @@ int main(void){
       }
 
       //if the player has the card
-      if(counter != 0) {
+      if(counter > 0) {
         printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
         scanf("%c", &str4);
         //if they don't want to place down all of their cards
@@ -343,6 +344,11 @@ int main(void){
       *computers have a 50% chance of calling BS if they have one card themsevles
       *computers have a 70% chance of calling BS if they have two cards themselves
       *computers have a 90% chance of calling BS if they have three cards themselves*/
+      if(findNumOfCards(&comp1, currentCard) > 0) {
+
+      } else if(findNumOfCards(&comp1, currentCard) == 0) {
+
+      
 
     }
 
@@ -466,4 +472,14 @@ void deleteCard(Vector *vector, int cardNum){
   }
   vector->size -= 1;
 
+}
+
+int findNumOfCards(Vector *vector, int current) {
+  int counter;
+  for(size_t i = 0; i < vector->size; ++i) {
+    if((vector->cards[i]).face == current) {
+      counter++;
+    }
+  }
+  return counter;
 }
