@@ -186,8 +186,12 @@ int main(void){
 
   int currentCard = 2;   //current card player is looking for
   int counter = 0; //how many of that type of card the player has
-  int alternative = 0; //bs card
-  char str2, str3;
+  int alternative = 0; //bs card placed if player doesn't have the card asked for
+  int numOfCardsPlacedDown; //if player wants to place down less cards than they have
+  int counter1; //counter for placing cards in pile
+  char str2; //for scanf
+  char str3; //for scanf
+  char str4; //for scanf
 
   while((player.size != 0) && (comp1.size != 0) && (comp2.size != 0) && (comp3.size != 0)) {
     //find next player
@@ -209,7 +213,7 @@ int main(void){
         printf("y or n?\n");
         scanf("%c", &str3);
         if(str3 == 'y') {
-          puts("Maybe next time!");
+          puts("Play again sometime!");
           return 0;
         }
         puts("Let's try again. It's your turn. Are you ready to play?");
@@ -219,7 +223,7 @@ int main(void){
 
       //find the current card
       puts("Here's your deck of cards");
-      sleep(2);
+      sleep(1);
       printf("\e[1;1H\e[2J");
       printVector(&player);
       printf("Your card to place down is %d.\n", currentCard);
@@ -228,11 +232,41 @@ int main(void){
           counter++;
         }
       }
+
+      //if the player has the card
       if(counter != 0) {
         printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
         scanf("%c", &str4);
-        if()
-      } else {
+        if(str4 == 'n') {
+          printf("How many would you like to place down?\n");
+          scanf("%d", numOfCardsPlacedDown);
+          while(numOfCardsPlacedDown > 4) {
+            printf("You're trying to place too many cards. There are only four %ds Try again.\n", currentCard);
+            scanf("%d", numOfCardsPlacedDown);
+          }
+        }
+
+        else {
+          //insert every card into the pile
+          for(size_t i = 0; i < player.size; i++) {
+            if((player.cards[i]).face == currentCard) {
+              insertCard(&pile, player.cards[i]);
+            }
+          }
+
+          //take every card away from the player's pile
+          while(counter1 < player.size) {
+            if((player.cards[counter1]).face == currentCard) {
+              deleteCard(&player, player.cards[counter1]);
+            } else {
+              counter1++;
+            }
+          }
+
+        }
+      }
+      //if the player does not have the card
+      else {
         printf("You do not have any %ds. Choose which card you want to place down.\n", currentCard);
         scanf("%d", &alternative);
       }
@@ -253,6 +287,7 @@ int main(void){
     } else {
       currentCard++;
     }
+    counter = 0;
   }
 
 
@@ -280,7 +315,7 @@ void clear(Vector *vector) {
 void init(Vector *vector) {
   vector->size = 0;
   vector->capacity = CAPACITY;
-  vector->cards = calloc(CAPACITY, sizeof(char));
+  vector->cards = calloc(CAPACITY, sizeof(Card));
 }
 
 void resetDeck(Card deck[], char *suits[], int faces[]) {
