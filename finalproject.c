@@ -204,12 +204,83 @@ int main(void){
     //find next player
     if((tmp.cards[0]).cardNum == (player.cards[0]).cardNum) {
       tmp = comp1;
+      
+      puts("It is now Computer 1's turn. Type y if you have received this notification and understand.\n");
+      scanf("%c", &str2);
+      while(str2 != 'y')
+      {
+           puts("Please type y to confirm you have received this message.\n");
+           scanf("%c", &str2);
+      }
+      puts("The card that computer 1 must place down is %d.\n", currentCard);
+      for(size_t i = 0; i < comp1.size; i++) 
+      {
+        if((comp1.cards[i]).face == currentCard)
+          counter++;
+      }
+      
+      
+      if(counter > 0)
+      {
+        for(size_t i = 0; i < comp1.size; i++) 
+        {
+            if((comp1.cards[i]).face == currentCard) {
+              insertCard(&pile, comp1.cards[i]);
+            }
+        }
+        for(size_t i = 0; i < comp1.size; i++) 
+        {
+            if((comp1.cards[i]).face == currentCard) {
+              deleteCard(&comp1, (comp1.cards[i]).cardNum);
+            }
+        }
+        puts("Computer 1 has placed %d of %d. Would you like to call BS?\n", counter, currentCard);
+        scanf("%c", str3);
+        if(str3 == 'y')
+        {
+          puts("Oops! Computer 1 wasn't lying!\n");
+          for(size_t i = 0; i < pile.size; i++) 
+          {
+            insertCard(&player, pile.cards[i]);
+          }
+
+          //delete cards from pile to restart game
+         for(size_t i = pile.size-1; i >= 0; i--) {
+         {
+           deleteCard(&pile, (pile.cards[i]).cardNum);
+         }
+        }
+      }
+      else
+      {
+        insertCard(&pile, comp1.cards[0]);
+        deleteCard(&comp1, (comp1.cards[0].cardNum))
+        puts("Computer 1 has placed 1 of %d. Would you like to call BS?\n", currentCard);
+        scanf("%c", str4);
+        if(str4 == 'y')
+        {
+          puts("You got it! Computer 1 was lying!!\n");
+          for(size_t i = 0; i < pile.size; i++) 
+          {
+            insertCard(&comp1, pile.cards[i]);
+          }
+
+          //delete cards from pile to restart game
+         for(size_t i = pile.size-1; i >= 0; i--) {
+         {
+           deleteCard(&comp1, (pile.cards[i]).cardNum);
+         }
+        }
+      }  
+      
     } else if((tmp.cards[0]).cardNum == (comp1.cards[0]).cardNum) {
       tmp = comp2;
     } else if((tmp.cards[0]).cardNum == (comp2.cards[0]).cardNum) {
       tmp = comp3;
     } else {
       tmp = player;
+      
+      counter = 0;
 
       //check player is ready to play
       puts("It's your turn. Are you ready to play?");
