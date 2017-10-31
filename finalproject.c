@@ -187,8 +187,9 @@ int main(void){
   int currentCard = 2;   //current card player is looking for
   int counter = 0; //how many of that type of card the player has
   int alternative = 0; //bs card placed if player doesn't have the card asked for
-  int numOfCardsPlacedDown; //if player wants to place down less cards than they have
-  int counter1; //counter for placing cards in pile
+  int numOfCardsPlacedDown; //if player wants to place down less/more cards than they have
+  int additionalCard; //if player wants to place down more cards than they have
+  int counter1, counter2, counter3; //counter for placing cards in pile
   char str2; //for scanf
   char str3; //for scanf
   char str4; //for scanf
@@ -237,16 +238,75 @@ int main(void){
       if(counter != 0) {
         printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
         scanf("%c", &str4);
+        //if they don't want to place down all of their cards
         if(str4 == 'n') {
           printf("How many would you like to place down?\n");
-          scanf("%d", numOfCardsPlacedDown);
+          scanf("%d", &numOfCardsPlacedDown);
+          //if they to place down too many cards
           while(numOfCardsPlacedDown > 4) {
             printf("You're trying to place too many cards. There are only four %ds Try again.\n", currentCard);
-            scanf("%d", numOfCardsPlacedDown);
+            scanf("%d", &numOfCardsPlacedDown);
           }
-        }
 
-        else {
+          //if they want to place down more than the cards they have
+          if(numOfCardsPlacedDown < counter) {
+            printf("You can only take in one more card along with the %d cards you will be placing down. Which card would you like that to be? Type the card from the range 1-however many cards you have.\n", counter);
+            scanf("%d", &additionalCard);
+            for(size_t i = 0; i < player.size; i++) {
+              if((player.cards[i]).face == currentCard) {
+                insertCard(&pile, player.cards[i]);
+                counter1++;
+              }
+            }
+            insertCard(&pile, player.cards[additionalCard-1]);
+
+            while(counter2 < player.size) {
+              if((player.cards[counter2]).face == currentCard) {
+                deleteCard(&player, player.cards[counter2].cardNum);
+              } else {
+                counter2++;
+              }
+            }
+            deleteCard(&player, player.cards[additionalCard-1].cardNum);
+
+          } else if(numOfCardsPlacedDown > counter){ //if they want to place down less cards than they have
+            for(size_t i = 0; i < player.size; i++) {
+              if(counter1 == numOfCardsPlacedDown) {
+                break;
+              }
+              if((player.cards[i]).face == currentCard) {
+                insertCard(&pile, player.cards[i]);
+                counter1++;
+              }
+            }
+
+            counter1 = 0;
+            while(counter1 <= numOfCardsPlacedDown) {
+              if((player.cards[counter3]).face == currentCard) {
+                insertCard(&pile, player.cards[counter3]);
+                counter1++;
+              }
+              counter3++;
+            }
+          } else { //if they said no but placed down the same number of cards as they have anyways
+            //insert every card into the pile
+            for(size_t i = 0; i < player.size; i++) {
+              if((player.cards[i]).face == currentCard) {
+                insertCard(&pile, player.cards[i]);
+              }
+            }
+
+            //take every card away from the player's pile
+            while(counter2 < player.size) {
+              if((player.cards[counter2]).face == currentCard) {
+                deleteCard(&player, player.cards[counter2].cardNum);
+              } else {
+                counter2++;
+              }
+            }
+          }
+
+        } else {
           //insert every card into the pile
           for(size_t i = 0; i < player.size; i++) {
             if((player.cards[i]).face == currentCard) {
@@ -255,11 +315,11 @@ int main(void){
           }
 
           //take every card away from the player's pile
-          while(counter1 < player.size) {
-            if((player.cards[counter1]).face == currentCard) {
-              deleteCard(&player, player.cards[counter1]);
+          while(counter2 < player.size) {
+            if((player.cards[counter2]).face == currentCard) {
+              deleteCard(&player, player.cards[counter2].cardNum);
             } else {
-              counter1++;
+              counter2++;
             }
           }
 
@@ -269,7 +329,14 @@ int main(void){
       else {
         printf("You do not have any %ds. Choose which card you want to place down.\n", currentCard);
         scanf("%d", &alternative);
+        insertCard(&pile, player.cards[alternative]);
+        deleteCard(&player, (player.cards[alternative]).cardNum);
       }
+
+      /*computers have a 20% chance of calling BS if they don't have the card themsevles
+      *computers have a 50% chance of calling BS if they have one card themsevles
+      *computers have a 70% chance of calling BS if they have two cards themselves
+      *computers have a 90% chance of calling BS if they have three cards themselves*/
 
     }
 
@@ -288,6 +355,12 @@ int main(void){
       currentCard++;
     }
     counter = 0;
+    alternative = 0;
+    numOfCardsPlacedDown = 0;
+    counter1 = 0;
+    counter2 = 0;
+    counter3 = 0;
+    additionalCard = 0;
   }
 
 
