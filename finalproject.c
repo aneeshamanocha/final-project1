@@ -788,7 +788,37 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
         //if loop isn't broken, player is correct
         puts("You were right & put down the correct cards! The computer was wrong when it called BS. The computer will now take all of the cards.");
         puts("Pile: 0 Cards");
+        if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
+          //insert cards into comp1 hand
+          for(int i = 0; i < pile->size; i++) {
+            insertCard(comp1, pile->cards[i]);
+          }
 
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
+          //insert cards into comp2 hand
+          for(int i = 0; i < pile->size; i++) {
+            insertCard(comp2, pile->cards[i]);
+          }
+
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
+          //insert cards into comp3 hand
+          for(size_t i = 0; i < pile->size; i++) {
+            insertCard(comp3, pile->cards[i]);
+          }
+
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        }
         puts("Type y to confirm that you have received this message");
         scanf(" %c", &str2);
         while(str2 != 'y') {
@@ -827,7 +857,7 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
               scanf(" %c", &str2);
             }
             break;
-          } else {
+        } else {
             //if player had correct cards and was not lying
             //printf("\e[1;1H\e[2J");
             puts("You were right & put down the correct cards! The computer was wrong when it called BS. The computer will now take all of the cards.");
@@ -838,6 +868,39 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
               puts("Please type y to confirm you have received this message");
               scanf(" %c", &str2);
             }
+
+            if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
+              //insert cards into comp1 hand
+              for(int i = 0; i < pile->size; i++) {
+                insertCard(comp1, pile->cards[i]);
+              }
+
+              //delete cards from pile to restart game
+              for(int i = pile->size-1; i >= 0; i--) {
+                deleteCard(pile, (pile->cards[i]).cardNum);
+              }
+            } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
+              //insert cards into comp2 hand
+              for(int i = 0; i < pile->size; i++) {
+                insertCard(comp2, pile->cards[i]);
+              }
+
+              //delete cards from pile to restart game
+              for(int i = pile->size-1; i >= 0; i--) {
+                deleteCard(pile, (pile->cards[i]).cardNum);
+              }
+            } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
+              //insert cards into comp3 hand
+              for(size_t i = 0; i < pile->size; i++) {
+                insertCard(comp3, pile->cards[i]);
+              }
+
+              //delete cards from pile to restart game
+              for(int i = pile->size-1; i >= 0; i--) {
+                deleteCard(pile, (pile->cards[i]).cardNum);
+              }
+            }
+
             printf("\e[1;1H\e[2J");
 
             puts("YOUR CARDS");
@@ -851,39 +914,8 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
             }
           }
         }
+
         break;
-
-        if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
-          //insert cards into comp1 hand
-          for(int i = 0; i < pile->size; i++) {
-            insertCard(comp1, pile->cards[i]);
-          }
-
-          //delete cards from pile to restart game
-          for(int i = pile->size-1; i >= 0; i--) {
-            deleteCard(pile, (pile->cards[i]).cardNum);
-          }
-        } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
-          //insert cards into comp2 hand
-          for(int i = 0; i < pile->size; i++) {
-            insertCard(comp2, pile->cards[i]);
-          }
-
-          //delete cards from pile to restart game
-          for(int i = pile->size-1; i >= 0; i--) {
-            deleteCard(pile, (pile->cards[i]).cardNum);
-          }
-        } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
-          //insert cards into comp3 hand
-          for(size_t i = 0; i < pile->size; i++) {
-            insertCard(comp3, pile->cards[i]);
-          }
-
-          //delete cards from pile to restart game
-          for(int i = pile->size-1; i >= 0; i--) {
-            deleteCard(pile, (pile->cards[i]).cardNum);
-          }
-        }
       } else {
         //changes computer to determine who is calling BS next
         if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
