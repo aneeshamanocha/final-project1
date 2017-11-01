@@ -38,7 +38,7 @@ int playerFunction(Vector *vector, Vector *comp1, Vector *comp2, Vector *comp3, 
 
 int main(void){
   //start the game
-  srand(time(NULL));
+  srand(1);
   puts("Welcome to the Game of BS! Are you ready to play?");
   char str1;
   printf("y or n?\n");
@@ -116,7 +116,7 @@ int main(void){
         break;
       }
     }
-    tmp = player;
+    tmp = comp1;
   } else if(findAceOfSpades(&comp1) == 1) {
     for(size_t i = 0; i <= comp1.size; ++i) {
       if((comp1.cards[i]).cardNum == 51) {
@@ -126,7 +126,7 @@ int main(void){
         break;
       }
     }
-    tmp = comp1;
+    tmp = comp2;
   } else if(findAceOfSpades(&comp2) == 1) {
     for(size_t i = 0; i <= comp2.size; ++i) {
       if((comp2.cards[i]).cardNum == 51) {
@@ -136,7 +136,7 @@ int main(void){
         break;
       }
     }
-    tmp = comp2;
+    tmp = comp3;
   } else {
     for(size_t i = 0; i <= comp3.size; ++i) {
       if((comp3.cards[i]).cardNum == 51) {
@@ -146,20 +146,20 @@ int main(void){
         break;
       }
     }
-    tmp = comp3;
+    tmp = player;
   }
 
   int currentCard = 2;   //current card player is looking for
 
   while((player.size != 0) && (comp1.size != 0) && (comp2.size != 0) && (comp3.size != 0)) {
     //find next player
-    if((tmp.cards[0]).cardNum == (player.cards[0]).cardNum) {
+    if((tmp.cards[0]).cardNum == (comp1.cards[0]).cardNum) {
       computerFunction(&comp1, &comp2, &pile, &player, currentCard, 1);
       tmp = comp2;
-    } else if((tmp.cards[0]).cardNum == (comp1.cards[0]).cardNum) {
+    } else if((tmp.cards[0]).cardNum == (comp2.cards[0]).cardNum) {
       computerFunction(&comp2, &comp3, &pile, &player, currentCard, 2);
       tmp = comp3;
-    } else if((tmp.cards[0]).cardNum == (comp2.cards[0]).cardNum) {
+    } else if((tmp.cards[0]).cardNum == (comp3.cards[0]).cardNum) {
       computerFunction(&comp3, &comp1, &pile, &player, currentCard, 3);
       tmp = player;
     } else {
@@ -334,14 +334,15 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
     }
 
     //asking user if they want to call BS
-    printf("Computer %d has placed %d of %d. Would you like to call BS?\n", numComputer, counter, currentCard);
-    scanf("%c", &str2);
+    printf("Computer %d has placed %d of %d. Would you like to call BS? Type y or n.\n", numComputer, counter, currentCard);
+    scanf(" %c", &str2);
     if(str2 == 'y') {
       printf("Oops! Computer %d wasn't lying! Type y to understand you are getting all the cards added to your pile.\n", numComputer);
-      scanf("%c", &str2);
+      printVector(player);
+      scanf(" %c", &str2);
       while(str2 != 'y') {
         puts("Try again & type y.");
-        scanf("%c", &str2);
+        scanf(" %c", &str2);
       }
 
       for(size_t i = 0; i < pile->size; i++) {
@@ -403,7 +404,7 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
         for(size_t i = 0; i < pile->size; i++){
             insertCard(vector2, pile->cards[i]);
         }
-        for(int i = pile->size; i >= 0; i--) {
+        for(int i = pile->size-1; i >= 0; i--) {
             deleteCard(pile, (pile->cards[i]).cardNum);
         }
 
@@ -415,7 +416,7 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
     insertCard(pile, vector->cards[0]);
     deleteCard(vector, (vector->cards[0].cardNum));
     printf("Computer %d has placed 1 of %d. Would you like to call BS?\n", numComputer, currentCard);
-    scanf("%c", &str2);
+    scanf(" %c", &str2);
     if(str2 == 'y') {
       printf("You got it! Computer %d was lying!! All of the cards will be added to Computer %d's pile!\n", numComputer, numComputer);
       for(size_t i = 0; i < pile->size; i++) {
@@ -478,15 +479,16 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
        for(int i = 0; i < pile->size; i++){
            insertCard(vector, pile->cards[i]);
        }
-       for(int i = pile->size; i >= 0; i--) {
+       for(int i = pile->size-1; i >= 0; i--) {
            deleteCard(pile, (pile->cards[i]).cardNum);
        }
 
      } else {
-       puts("Nobody wanted to call BS, so we are moving on to the next player - computer 2");
+       puts("Nobody wanted to call BS, so we are moving on to the next player");
      }
    }
   }
+  return 0;
 }
 
 int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, Vector *pile, int currentCard) {
@@ -536,23 +538,23 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
   //if the player has the card
   if(counter > 0) {
     printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
-    scanf("%c", &str2);
+    scanf(" %c", &str2);
     //if they don't want to place down all of their cards
     if(str2 == 'n') {
       printf("How many would you like to place down?\n");
-      scanf("%d", &numOfCardsPlacedDown);
+      scanf(" %d", &numOfCardsPlacedDown);
       //if they try to place down too many cards
       //if they try to place down too little cards
       //if they are trying to place down more cards than they have
       while(numOfCardsPlacedDown > 4 || numOfCardsPlacedDown <= 0 || player-> size < numOfCardsPlacedDown) {
         printf("You can't place down that amount of cards. Try again.\n");
-        scanf("%d", &numOfCardsPlacedDown);
+        scanf(" %d", &numOfCardsPlacedDown);
       }
 
       //if they want to place down one more than the cards they have
       if(numOfCardsPlacedDown > counter) {
         printf("You can only take in one more card along with the %d cards you will be placing down. Which card would you like that to be? Type the card from the range 1-however many cards you have.\n", counter);
-        scanf("%d", &additionalCard);
+        scanf(" %d", &additionalCard);
         for(size_t i = 0; i < player->size; i++) {
           if((player->cards[i]).face == currentCard) {
             insertCard(pile, player->cards[i]);
@@ -630,7 +632,7 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
   //if the player does not have the card
   else {
     printf("You do not have any %ds. Choose which card you want to place down.\n", currentCard);
-    scanf("%d", &alternative);
+    scanf(" %d", &alternative);
     insertCard(pile, player->cards[alternative-1]);
     deleteCard(player, (player->cards[alternative-1]).cardNum);
   }
@@ -773,4 +775,5 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
       tmp2 = player;
     }
   }
+  return 0;
 }
