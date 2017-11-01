@@ -38,7 +38,7 @@ int playerFunction(Vector *vector, Vector *comp1, Vector *comp2, Vector *comp3, 
 
 int main(void){
   //start the game
-  srand(1);
+  srand(time(NULL));
   puts("Welcome to the Game of BS! Are you ready to play?");
   char str1;
   printf("y or n?\n");
@@ -73,7 +73,13 @@ int main(void){
   puts("Here are the rules for BS: The cards are distributed evenly between three computers players and you. The ace of spades will be placed down first and then following the placement, the next player will check their deck for the number two. If they have any twos, they will place all of them down and say they have an amount of twos. If they do not have a two, they will place down one random card and claim they placed down a two. Each player then has a chance of calling BS on them. If somebody gets called for BS, the last card placed on the pile will be shown to the players. If the person who placed down the last card lied and the card wasn't the number they stated it was, the whole pile gets added to their hand. If the person who called BS is wrong and the person does have that card, they will get the whole pile added to their deck. The game will circle through the players, and the next player will place down threes. The same procedure will continue to occur until somebody runs out of cards.");
   puts("");
 
-  sleep(5);
+  puts("Type y when you are finished reading the rules.");
+  scanf(" %c", &str1);
+  while(str1 != 'y') {
+    puts("Please type y when you are finished reading the rules");
+    scanf(" %c", &str1);
+  }
+  printf("\e[1;1H\e[2J");
 
   //player1 assigned cards
   puts("YOUR CARDS");
@@ -88,21 +94,21 @@ int main(void){
   //puts("FOR COMP 1");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp1, deck[i+13]);
-    printf("CardNum: %d Suit: %s Face: %d\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
+    //printf("CardNum: %d Suit: %s Face: %d\n", (comp1.cards[i]).cardNum, (comp1.cards[i]).suit, (comp1.cards[i]).face);
   }
 
   //comp2 assigned cards
   //puts("FOR COMP 2");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp2, deck[i+26]);
-    printf("CardNum: %d Suit: %s Face: %d\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
+    //printf("CardNum: %d Suit: %s Face: %d\n", (comp2.cards[i]).cardNum, (comp2.cards[i]).suit, (comp2.cards[i]).face);
   }
 
   //comp3 assigned cards
   //puts("FOR COMP 3");
   for(size_t i = 0; i < 13; ++i) {
     insertCard(&comp3, deck[i+39]);
-    printf("CardNum: %d Suit: %s Face: %d\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
+    //printf("CardNum: %d Suit: %s Face: %d\n", (comp3.cards[i]).cardNum, (comp3.cards[i]).suit, (comp3.cards[i]).face);
   }
 
   Vector tmp;
@@ -147,6 +153,13 @@ int main(void){
       }
     }
     tmp = player;
+  }
+
+  puts("Type y when you're ready to play");
+  scanf(" %c", &str1);
+  while(str1 != 'y') {
+    puts("Please type y when you are finished reading the rules");
+    scanf(" %c", &str1);
   }
 
   int currentCard = 2;   //current card player is looking for
@@ -302,13 +315,14 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
   int callingBS = 0; //callingBS = 2 not callingBS = 1
 
   //introduction to make sure player is ready to play
+  printf("\e[1;1H\e[2J");
   printf("It is now Computer %d's turn.\n", numComputer);
   printf("The card that computer %d must place down is %d.\n", numComputer, currentCard);
-  puts("Type y if you have received this notification and understand.");
-  scanf("%c", &str2);
+  puts("Type y if you have received this notification.");
+  scanf(" %c", &str2);
   while(str2 != 'y'){
-       puts("Please type y to confirm you have received this message.\n");
-       scanf("%c", &str2);
+       puts("Please type y to confirm you have received this message.");
+       scanf(" %c", &str2);
   }
 
   //counter for how many cards
@@ -334,22 +348,33 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
     }
 
     //asking user if they want to call BS
-    printf("Computer %d has placed %d of %d. Would you like to call BS? Type y or n.\n", numComputer, counter, currentCard);
+    printf("\e[1;1H\e[2J");
+    printf("Computer %d has placed %d of %d. Would you like to call BS?\nType y or n.\n", numComputer, counter, currentCard);
     scanf(" %c", &str2);
     if(str2 == 'y') {
       printf("Oops! Computer %d wasn't lying! Type y to understand you are getting all the cards added to your pile.\n", numComputer);
-      printVector(player);
+      puts("Pile: 0");
       scanf(" %c", &str2);
       while(str2 != 'y') {
         puts("Try again & type y.");
         scanf(" %c", &str2);
       }
+      printf("\e[1;1H\e[2J");
 
       for(size_t i = 0; i < pile->size; i++) {
           insertCard(player, pile->cards[i]);
       }
       for(int i = pile->size-1; i >= 0; i--) {
         deleteCard(pile, pile->cards[i].cardNum);
+      }
+
+      puts("YOUR CARDS");
+      printVector(player);
+      puts("Type y when you're ready to continue.");
+      scanf(" %c", &str2);
+      while(str2 != 'y') {
+        puts("Try again & type y.");
+        scanf(" %c", &str2);
       }
     }
 
@@ -391,13 +416,16 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
       }
 
       if(callingBS == 2) {
-        printf("A computer wants to call BS on computer %d. Please type y to confirm that you got this message\n.", numComputer);
-        scanf("%c", &str2);
+        printf("\e[1;1H\e[2J");
+        printf("A computer wants to call BS on computer %d. Please type y to confirm that you got this message.\n", numComputer);
+        scanf(" %c", &str2);
         while(str2 != 'y') {
           puts("Please try again & type y.");
-          scanf("%c", &str2);
+          scanf(" %c", &str2);
         }
+        sleep(1);
 
+        printf("\e[1;1H\e[2J");
         puts("A computer was wrong when it called BS! All of the cards from the pile will be added to the computer's hand now!");
         puts("Pile: 0 cards");
         //insert cards into comp2 & delete from pile
@@ -409,15 +437,18 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
         }
 
       } else {
+        printf("\e[1;1H\e[2J");
         puts("Nobody wanted to call BS, so we are moving on to the next player.");
       }
     }
   } else { //picks random cards because computer doesn't have the card requested
     insertCard(pile, vector->cards[0]);
     deleteCard(vector, (vector->cards[0].cardNum));
+    printf("\e[1;1H\e[2J");
     printf("Computer %d has placed 1 of %d. Would you like to call BS?\n", numComputer, currentCard);
     scanf(" %c", &str2);
     if(str2 == 'y') {
+      printf("\e[1;1H\e[2J");
       printf("You got it! Computer %d was lying!! All of the cards will be added to Computer %d's pile!\n", numComputer, numComputer);
       for(size_t i = 0; i < pile->size; i++) {
         insertCard(vector, pile->cards[i]);
@@ -465,13 +496,15 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
      }
 
      if(callingBS == 2) {
+       printf("\e[1;1H\e[2J");
        printf("A computer wants to call BS on computer %d. Please type y to confirm that you got this message.\n", numComputer);
-       scanf("%c", &str2);
+       scanf(" %c", &str2);
        while(str2 != 'y') {
          puts("Please try again & type y.");
-         scanf("%c", &str2);
+         scanf(" %c", &str2);
        }
 
+       printf("\e[1;1H\e[2J");
        printf("A computer was right when it called BS! All of the cards from the pile will be added to computer %d now!", numComputer);
        puts("Pile: 0 cards");
        sleep(2);
@@ -484,6 +517,7 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
        }
 
      } else {
+       printf("\e[1;1H\e[2J");
        puts("Nobody wanted to call BS, so we are moving on to the next player");
      }
    }
@@ -507,20 +541,21 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
   Vector *tmp2 = comp1;
 
   //check player is ready to play
+  printf("\e[1;1H\e[2J");
   puts("It's your turn. Are you ready to play?");
   printf("y or n?\n");
-  scanf("%c", &str2);
+  scanf(" %c", &str2);
   while(str2 == 'n') {
     puts("Do you want to stop the game?");
     printf("y or n?\n");
-    scanf("%c", &str2);
+    scanf(" %c", &str2);
     if(str2 == 'y') {
       puts("Play again sometime!");
       return 0;
     }
     puts("Let's try again. It's your turn. Are you ready to play?");
     printf("y or n?\n");
-    scanf("%c", &str2);
+    scanf(" %c", &str2);
   }
 
   //find the current card
@@ -537,7 +572,7 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
 
   //if the player has the card
   if(counter > 0) {
-    printf("You have %d of %d. Would you like to place them down?\n y or n?", counter, currentCard);
+    printf("You have %d of %d. Would you like to place them down?\n y or n?\n", counter, currentCard);
     scanf(" %c", &str2);
     //if they don't want to place down all of their cards
     if(str2 == 'n') {
@@ -678,11 +713,12 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
 
     //if somebody does call bs, notify player
     if(callingBS == 2) {
+      printf("\e[1;1H\e[2J");
       puts("One of the computer users has called BS on you. Type y when you have received this message.");
-      scanf("%c", &str2);
+      scanf(" %c", &str2);
       while(str2 != 'y') {
         puts("Please type y to confirm you have received this message");
-        scanf("%c", &str2);
+        scanf(" %c", &str2);
       }
 
       //flip and sees player put down the wrong cards
@@ -702,12 +738,14 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
             }
 
             testBs = 1;
+            printf("\e[1;1H\e[2J");
+            puts("YOUR CARDS");
             printVector(player);
             puts("Here is your new list. Ready to continue? Please type y to continue.");
-            scanf("%c", &str2);
+            scanf(" %c", &str2);
             while(str2 != 'y') {
               puts("Please type y to confirm you have received this message");
-              scanf("%c", &str2);
+              scanf(" %c", &str2);
             }
             break;
         }
@@ -717,19 +755,25 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
       }
 
       //if player had correct cards and was not lying
+      //printf("\e[1;1H\e[2J");
       puts("You were right & put down the correct cards! The computer was wrong when it called BS. The computer will now take all of the cards.");
       puts("Pile: 0 Cards");
-      sleep(2);
+      puts("Type y to confirm that you have received this message");
+      scanf(" %c", &str2);
+      while(str2 != 'y') {
+        puts("Please type y to confirm you have received this message");
+        scanf(" %c", &str2);
+      }
       printf("\e[1;1H\e[2J");
 
       puts("YOUR CARDS");
       printVector(player);
 
       puts("Please confirm you are ready to move on by typing y.");
-      scanf("%c", &str2);
+      scanf(" %c", &str2);
       while(str2 != 'y') {
         puts("Please type y to confirm you have received this message");
-        scanf("%c", &str2);
+        scanf(" %c", &str2);
       }
 
       if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
