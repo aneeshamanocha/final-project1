@@ -826,6 +826,7 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
               puts("Please type y to confirm you have received this message");
               scanf(" %c", &str2);
             }
+            break;
           } else {
             //if player had correct cards and was not lying
             //printf("\e[1;1H\e[2J");
@@ -850,51 +851,52 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
             }
           }
         }
+        break;
+
+        if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
+          //insert cards into comp1 hand
+          for(int i = 0; i < pile->size; i++) {
+            insertCard(comp1, pile->cards[i]);
+          }
+
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
+          //insert cards into comp2 hand
+          for(int i = 0; i < pile->size; i++) {
+            insertCard(comp2, pile->cards[i]);
+          }
+
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
+          //insert cards into comp3 hand
+          for(size_t i = 0; i < pile->size; i++) {
+            insertCard(comp3, pile->cards[i]);
+          }
+
+          //delete cards from pile to restart game
+          for(int i = pile->size-1; i >= 0; i--) {
+            deleteCard(pile, (pile->cards[i]).cardNum);
+          }
+        }
+      } else {
+        //changes computer to determine who is calling BS next
+        if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
+          tmp2 = comp2;
+        } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
+          tmp2 = comp3;
+        } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
+          tmp2 = player;
+          puts("Nobody called BS on you. We are moving on.");
+          break;
+        }
       }
-
-      if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
-        //insert cards into comp1 hand
-        for(int i = 0; i < pile->size; i++) {
-          insertCard(comp1, pile->cards[i]);
-        }
-
-        //delete cards from pile to restart game
-        for(int i = pile->size-1; i >= 0; i--) {
-          deleteCard(pile, (pile->cards[i]).cardNum);
-        }
-      } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
-        //insert cards into comp2 hand
-        for(int i = 0; i < pile->size; i++) {
-          insertCard(comp2, pile->cards[i]);
-        }
-
-        //delete cards from pile to restart game
-        for(int i = pile->size-1; i >= 0; i--) {
-          deleteCard(pile, (pile->cards[i]).cardNum);
-        }
-      } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
-        //insert cards into comp3 hand
-        for(size_t i = 0; i < pile->size; i++) {
-          insertCard(comp3, pile->cards[i]);
-        }
-
-        //delete cards from pile to restart game
-        for(int i = pile->size-1; i >= 0; i--) {
-          deleteCard(pile, (pile->cards[i]).cardNum);
-        }
-      }
-      break;
     }
-
-    //changes computer to determine who is calling BS next
-    if((tmp2->cards[0]).cardNum == (comp1->cards[0]).cardNum) {
-      tmp2 = comp2;
-    } else if((tmp2->cards[0]).cardNum != (comp2->cards[0]).cardNum) {
-      tmp2 = comp3;
-    } else if((tmp2->cards[0]).cardNum != (comp3->cards[0]).cardNum) {
-      tmp2 = player;
-    }
-  }
 
   return 0;
 }
