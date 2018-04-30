@@ -363,13 +363,10 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
 
       for(size_t i = 0; i < pile->size; i++) {
           insertCard(player, pile->cards[i]);
-          printf("Cardnum of card added: %d\n", pile->cards[i].cardNum);
       }
       for(int i = pile->size-1; i >= 0; i--) {
         deleteCard(pile, pile->cards[i].cardNum);
       }
-      puts("PILE");
-      printVector(pile);
 
       puts("YOUR CARDS");
       printVector(player);
@@ -381,35 +378,35 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
       }
     }
 
-    /*computers have a 20% chance of calling BS if they don't have the card themsevles
-    *computers have a 50% chance of calling BS if they have one card themsevles
-    *computers have a 70% chance of calling BS if they have two cards themselves
-    *computers have a 90% chance of calling BS if they have three cards themselves
+    /*computers have a 10% chance of calling BS if they don't have the card themsevles
+    *computers have a 20% chance of calling BS if they have one card themsevles
+    *computers have a 40% chance of calling BS if they have two cards themselves
+    *computers have a 70% chance of calling BS if they have three cards themselves
     *computers have a 100% chance of calling BS if they have all of the cards themselves*/
 
     //compute chance of other computer calling BS
     else {
       randPercent = rand() % 100 + 1;
       if(findNumOfCards(vector2, currentCard) == 0) {
-        if(randPercent <= 20) {
+        if(randPercent <= 10) {
           callingBS = 2;
         } else {
           callingBS = 1;
         }
       } else if(findNumOfCards(vector2, currentCard) == 1) {
-        if(randPercent <= 50) {
+        if(randPercent <= 20) {
           callingBS = 2;
         } else {
           callingBS = 1;
         }
       } else if(findNumOfCards(vector2, currentCard) == 2) {
-        if(randPercent <= 70) {
+        if(randPercent <= 40) {
           callingBS = 2;
         } else {
           callingBS = 1;
         }
       } else if(findNumOfCards(vector2, currentCard) == 3) {
-        if(randPercent <= 90) {
+        if(randPercent <= 70) {
           callingBS = 2;
         } else {
           callingBS = 1;
@@ -431,8 +428,7 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
         printf("\e[1;1H\e[2J");
         puts("A computer was wrong when it called BS! All of the cards from the pile will be added to the computer's hand now!");
         puts("Pile: 0 cards");
-        puts("PILE");
-        printVector(pile);
+
         //insert cards into comp2 & delete from pile
         for(size_t i = 0; i < pile->size; i++){
             insertCard(vector2, pile->cards[i]);
@@ -440,8 +436,6 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
         for(int i = pile->size-1; i >= 0; i--) {
             deleteCard(pile, (pile->cards[i]).cardNum);
         }
-        puts("PILE");
-        printVector(pile);
 
         puts("Type y when you have received this message.");
         scanf(" %c", &str2);
@@ -452,6 +446,12 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
       } else {
         printf("\e[1;1H\e[2J");
         puts("Nobody wanted to call BS, so we are moving on to the next player.");
+        puts("Type y when ready to move on.");
+        scanf(" %c", &str2);
+        while(str2 != 'y') {
+          puts("Type y when you're ready please.");
+          scanf(" %c", &str2);
+        }
       }
     }
   } else { //picks random cards because computer doesn't have the card requested
@@ -480,34 +480,34 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
      }
 
    } else {
-     /*computers have a 20% chance of calling BS if they don't have the card themsevles
-     *computers have a 50% chance of calling BS if they have one card themsevles
-     *computers have a 70% chance of calling BS if they have two cards themselves
-     *computers have a 90% chance of calling BS if they have three cards themselves
+     /*computers have a 10% chance of calling BS if they don't have the card themsevles
+     *computers have a 20% chance of calling BS if they have one card themsevles
+     *computers have a 40% chance of calling BS if they have two cards themselves
+     *computers have a 70% chance of calling BS if they have three cards themselves
      *computers have a 100% chance of calling BS if they have all of the cards themselves*/
 
      //compute chance of other computer calling BS
      randPercent = rand() % 100 + 1;
      if(findNumOfCards(vector2, currentCard) == 0) {
-       if(randPercent <= 20) {
+       if(randPercent <= 10) {
          callingBS = 2;
        } else {
          callingBS = 1;
        }
      } else if(findNumOfCards(vector2, currentCard) == 1) {
-       if(randPercent <= 50) {
+       if(randPercent <= 20) {
          callingBS = 2;
        } else {
          callingBS = 1;
        }
      } else if(findNumOfCards(vector2, currentCard) == 2) {
-       if(randPercent <= 70) {
+       if(randPercent <= 40) {
          callingBS = 2;
        } else {
          callingBS = 1;
        }
      } else if(findNumOfCards(vector2, currentCard) == 3) {
-       if(randPercent <= 90) {
+       if(randPercent <= 70) {
          callingBS = 2;
        } else {
          callingBS = 1;
@@ -540,6 +540,12 @@ int computerFunction(Vector *vector, Vector *vector2, Vector *pile, Vector *play
      } else {
        printf("\e[1;1H\e[2J");
        puts("Nobody wanted to call BS, so we are moving on to the next player");
+       puts("Type y when ready to move on.");
+       scanf(" %c", &str2);
+       while(str2 != 'y') {
+         puts("Type y when you're ready please.");
+         scanf(" %c", &str2);
+       }
      }
    }
   }
@@ -611,6 +617,10 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
       if(numOfCardsPlacedDown > counter) {
         printf("You can only take in one more card along with the %d cards you will be placing down. Which card would you like that to be? Type the card from the range 1-however many cards you have.\n", counter);
         scanf(" %d", &additionalCard);
+        while(additionalCard > player->size) {
+          puts("You can't place that card down. Try again.");
+          scanf(" %d", &additionalCard);
+        }
         for(size_t i = 0; i < player->size; i++) {
           if((player->cards[i]).face == currentCard) {
             insertCard(pile, player->cards[i]);
@@ -689,7 +699,7 @@ int playerFunction(Vector *player, Vector *comp1, Vector *comp2, Vector *comp3, 
   else {
     printf("You do not have any %ds. Choose which card you want to place down.\n", currentCard);
     scanf(" %d", &alternative);
-    while(alternative >= player->size) {
+    while(alternative > player->size) {
       puts("You cannot place that card down. Please try again.");
       scanf(" %d", &alternative);
     }
